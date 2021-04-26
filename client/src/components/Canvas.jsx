@@ -15,7 +15,7 @@ import Circle from '../tools/Circle';
 import Line from '../tools/Line';
 import {getCanvas} from '../actions/file.js';
 
-const Canvas = observer( () => {
+const Canvas = observer( ({lineRef, strokeColorRef, fillColorRef}) => {
     const canvasRef = useRef();
     const usernameRef = useRef();
     const [modal, setModal] = useState(true);
@@ -62,7 +62,23 @@ const Canvas = observer( () => {
     }, [modal, id]);
 
     const settingsHandler = (msg) => {
-        console.log('settingsHandler ', msg)
+        switch(msg.type) {
+            case "lineWidth":
+                toolState.setLineWidth(msg.value);
+                lineRef.current.value = msg.value;
+                break;
+            case "strokeColor":
+                toolState.setStrokeColor(msg.value);
+                strokeColorRef.current.value = msg.value;
+                break; 
+            case "fillColor":
+                toolState.setFillColor(msg.value);
+                fillColorRef.current.value = msg.value;
+                break;               
+            default:
+                return false;       
+        }
+    
     }
     const drawHandler = (msg) => {
         const figure = msg.figure;

@@ -13,7 +13,6 @@ class FileController {
             
             fs.stat(path.join(__dirname, '/../files', `${req.query.id}`), function(err) {
                 
-                fsExtra.emptyDirSync(path.join(__dirname, '/../files'));
                 if (!err) {
                     fsExtra.emptyDirSync(path.join(__dirname, '/../files', `${req.query.id}`));
                 } 
@@ -49,6 +48,16 @@ class FileController {
             return res.status(500).json({message: e.message});
         }
     }
+    deleteImage(req, res) {
+        try {
+            if ( fs.existsSync(path.join(__dirname, '/../files')) ) {
+                fsExtra.emptyDirSync(path.join(__dirname, '/../files'));
+            }
+            return res.json({message: "Images dir was cleared"});
+        } catch(e) {
+            return res.status(500).json({message: e.message});
+        }
+    } 
     
 }
 module.exports = new FileController();

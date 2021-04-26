@@ -1,22 +1,21 @@
 import React, {useState, useRef, useEffect} from 'react';
 import toolState from '../store/toolState';
 import canvasState from '../store/canvasState';
-import {shareCanvas, getCanvas} from '../actions/file.js';
+import {shareCanvas, getCanvas, clearDir} from '../actions/file.js';
 import {useParams} from 'react-router-dom';
 import {WS_URL} from '../config.js';
+import {observer} from 'mobx-react-lite';
 
 import {Button} from 'react-bootstrap';
 
-const SettingsBar = () => {
+const SettingsBar = observer(({lineRef, strokeColorRef, fillColorRef}) => {
     
     const [clear, setClear] = useState(false);
     const {id} = useParams();
     const copyRef = useRef();
-    const lineRef = useRef();
-    const strokeColorRef = useRef();
-    const fillColorRef = useRef();
     const socket = new WebSocket(WS_URL);
-      
+
+    
     useEffect(() => {
         getCanvas(id)
             .then(response => {
@@ -27,23 +26,6 @@ const SettingsBar = () => {
             });
 
     }, [id]);
-
-    // useEffect(() => {
-    //     socket.onmessage = (event) => {
-    //         let msg = JSON.parse(event.data);
-    //         switch(msg.method) {
-                
-    //             case "settings":
-    //                 settingsHandler(msg);
-    //                 break;              
-                      
-    //         }
-    //     }
-    // }, []);
-
-    const settingsHandler = (msg) => {
-        console.log('settingsHandler ', msg)
-    }
 
     const onShareHandler = id => {
         window.confirm('Are you sure') && shareCanvas(id);
@@ -68,14 +50,28 @@ const SettingsBar = () => {
             button.removeAttribute('disabled');
         }, 1500));   
     }
-    const lineHandler = (e) => {
-        toolState.setLineWidth(e.target.value);
+    const socketSettingsSend = (event, type) => {
         socket.send(JSON.stringify({
-            id: id,
-            method: "settings",
-            type: 'lineWidth',
-            value: e.target.value
+            id,
+            method: 'settings',
+            type,
+            value: event.target.value
         }));
+    }
+    const lineHandler = e => {
+        toolState.setLineWidth(e.target.value);
+        socketSettingsSend(e, 'lineWidth');
+    }
+    const strokeHandler = e => {
+        toolState.setStrokeColor(e.target.value);
+        socketSettingsSend(e, 'strokeColor');
+    }
+    const fillHandler = e => {
+        toolState.setFillColor(e.target.value);
+        socketSettingsSend(e, 'fillColor');
+    }
+    const onClearDirHandler = () => {
+        window.confirm('Are you sure') && clearDir();;
     }
     return (
         <div className="toolbar toolbar-settings">
@@ -87,14 +83,14 @@ const SettingsBar = () => {
                         onChange={ e => lineHandler(e)}
                         type="number" 
                         id="line-width"
-                        value={toolState.lineWidth}
+                        defaultValue="1"
                         min={1} max={50}/>
                 </div>
                 <div className="toolbar-settings__group">
                     <label htmlFor="stroke-color">Цвет обводки</label>
                     <input 
                         ref={strokeColorRef}
-                        onChange={ e => toolState.setStrokeColor(e.target.value)}
+                        onChange={ e => strokeHandler(e)}
                         type="color" 
                         id="stroke-color"/> 
                 </div>
@@ -102,16 +98,17 @@ const SettingsBar = () => {
                     <label htmlFor="stroke-color">Цвет заливки</label>
                     <input 
                         ref={fillColorRef}
-                        onChange={ e => toolState.setFillColor(e.target.value)}
+                        onChange={ e => fillHandler(e)}
                         type="color" 
                         id="stroke-color"/>
                 </div>
             </div>
             <div className="toolbar-settings__right">    
                 <Button ref={copyRef} variant="primary" size="sm" className="toolbar-settings__btn toolbar__share-btn" onClick={() => onShareHandler(id)}>Share canvas</Button>           
+                <Button variant="danger" size="sm" className="toolbar-settings__btn toolbar__share-btn" onClick={onClearDirHandler}>Clear images</Button>           
             </div>
         </div>
     )
-}
+});
 
 export default SettingsBar;

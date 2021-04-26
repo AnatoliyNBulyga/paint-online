@@ -31,3 +31,8 @@ export async function getCanvas(id) {
     }
     return response.data;
 }
+
+export async function clearDir() {
+    const response = await axios.delete(`${API_URL}api/image`)
+    console.log(response.data);
+} 
