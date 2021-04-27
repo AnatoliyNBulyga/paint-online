@@ -10,7 +10,7 @@ export default class Brush extends Tool {
         this.canvas.onmousedown = this.mouseDownHandler.bind(this);
         this.canvas.onmouseup = this.mouseUpHandler.bind(this);
     }
-    mouseUpHandler(e) {
+    mouseUpHandler(e)  {
         this.mouseDown = false;
         this.socket.send(JSON.stringify({
             method: 'draw',

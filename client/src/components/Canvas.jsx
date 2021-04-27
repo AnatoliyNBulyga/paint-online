@@ -175,7 +175,7 @@ const Canvas = observer( ({lineRef, strokeColorRef, fillColorRef}) => {
                     </Modal.Footer>
                 </Form>    
             </Modal>
-            <canvas onMouseDown={mouseDownHandler} ref={canvasRef} width={600} height={400} />
+            <canvas onMouseDown={mouseDownHandler} ref={canvasRef} width={700} height={500} />
         </div>
     )
 });
