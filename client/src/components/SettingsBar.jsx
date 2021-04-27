@@ -77,7 +77,7 @@ const SettingsBar = observer(({lineRef, strokeColorRef, fillColorRef}) => {
         <div className="toolbar toolbar-settings">
             <div className="toolbar-settings__left">
                 <div className="toolbar-settings__group">
-                    <label htmlFor="line-width">Толщина обводки</label>
+                    <label htmlFor="line-width">Line width</label>
                     <input 
                         ref={lineRef}
                         onChange={ e => lineHandler(e)}
@@ -87,7 +87,7 @@ const SettingsBar = observer(({lineRef, strokeColorRef, fillColorRef}) => {
                         min={1} max={50}/>
                 </div>
                 <div className="toolbar-settings__group">
-                    <label htmlFor="stroke-color">Цвет обводки</label>
+                    <label htmlFor="stroke-color">Stroke color</label>
                     <input 
                         ref={strokeColorRef}
                         onChange={ e => strokeHandler(e)}
@@ -95,7 +95,7 @@ const SettingsBar = observer(({lineRef, strokeColorRef, fillColorRef}) => {
                         id="stroke-color"/> 
                 </div>
                 <div className="toolbar-settings__group">
-                    <label htmlFor="stroke-color">Цвет заливки</label>
+                    <label htmlFor="stroke-color">Fill color</label>
                     <input 
                         ref={fillColorRef}
                         onChange={ e => fillHandler(e)}

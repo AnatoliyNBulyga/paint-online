@@ -35,7 +35,7 @@ const Canvas = observer( ({lineRef, strokeColorRef, fillColorRef}) => {
         canvasState.setSessionId(id);
         toolState.setTool(new Brush(canvasRef.current, socket, id));
         socket.onopen = () => {
-            console.log('Подключение установлено')
+            console.log('Connection is established')
             socket.send(JSON.stringify({
                 id: id,
                 username: canvasState.username,
@@ -46,7 +46,7 @@ const Canvas = observer( ({lineRef, strokeColorRef, fillColorRef}) => {
             let msg = JSON.parse(event.data);
             switch(msg.method) {
                 case "connection":
-                    console.log(`Пользователь ${msg.username} присоединился`);
+                    console.log(`User ${msg.username} connected`);
                     break;
                 case "draw":
                     drawHandler(msg);
@@ -163,9 +163,9 @@ const Canvas = observer( ({lineRef, strokeColorRef, fillColorRef}) => {
                 <Form noValidate validated={validated} onSubmit={connectionHandler}>
                     <Modal.Header><div className="modal__title">Log in</div></Modal.Header>
                     <Modal.Body>
-                        <Form.Control required type="text" onChange={() => setValidated(true)} ref={usernameRef} placeholder="Enter your name" />
+                        <Form.Control required type="text" minlength="3" maxlength="30" onChange={() => setValidated(true)} ref={usernameRef} placeholder="Enter your name" />
                         <Form.Control.Feedback type="invalid">
-                            Please enter your name
+                            Please enter your name (min 3 characters)
                         </Form.Control.Feedback>
                     </Modal.Body>
                     <Modal.Footer>
